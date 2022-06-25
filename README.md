@@ -1,4 +1,4 @@
-# :computer: 超星学习通自动化完成任务点(命令行版)
+# :computer: 超星学习通自动化完成任务点(node版本)
 
 <p align="center">
    
@@ -9,7 +9,7 @@
 ## :books: 使用方法
 
 ### 源码运行(推荐)
-1. 提前准备： node pnpm ts-node
+1. 提前准备：node pnpm ts-node
 2. `git clone https://github.com/s744007195/chaoxing.git` 项目至本地
 3. `cd chaoxing`
 4. `pnpm install`
