@@ -38,6 +38,7 @@ const desc = () => {
             whitespaceBreak: true
         }, (err: any, data: any) => {
             if (err) {
+                console.log(err)
             }
             console.log(data)
             r('')
