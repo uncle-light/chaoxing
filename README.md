@@ -1,4 +1,4 @@
-# :computer: 超星学习通自动化完成任务点(node版本)
+# :computer: 超星学习通尔雅自动化
 
 <p align="center">
    
@@ -8,13 +8,9 @@
 
 ## :books: 使用方法
 
-### 源码运行(推荐)
-1. 提前准备：node pnpm ts-node
-2. `git clone https://github.com/s744007195/chaoxing.git` 项目至本地
-3. `cd chaoxing`
-4. `pnpm install`
-5. `修改index.ts 账号密码配置`
-5. `ts-node index.ts` 运行程序
+### 发行包运行(推荐)
+- [window版本下载](https://install.appcenter.ms/users/clashx/apps/clashx-pro/distribution_groups/public)
+- 下载后打开运行 根据提示输入账号密码
 
 
 ### 使用Docker运行
