@@ -9,7 +9,7 @@
 ## :books: 使用方法
 
 ### 发行包运行(推荐)
-- [window版本下载](https://install.appcenter.ms/users/clashx/apps/clashx-pro/distribution_groups/public)
+- [window版本下载](https://github.com/uncle-light/chaoxing/releases/download/v0.0.1/chaoxing-win-x64.exe)
 - 下载后打开运行 根据提示输入账号密码
 
 
