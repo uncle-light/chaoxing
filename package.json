@@ -6,7 +6,7 @@
   "exports": "./index.ts",
   "scripts": {
     "dev": "ts-node index.ts",
-    "build": "rimraf dist &&  ncc build ./index.ts -m -C  -o dist && rimraf app  && pkg ./",
+    "build": "rimraf dist &&  ncc build ./index.ts -m -C  -o dist && rimraf app  && pkg  --compress GZip .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pkg": {
