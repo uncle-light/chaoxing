@@ -1,24 +1,37 @@
 {
   "name": "chaoxing",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
+  "version": "0.0.1",
+  "description": "超星",
+  "bin": "./dist/index.js",
+  "exports": "./index.ts",
   "scripts": {
     "dev": "ts-node index.ts",
+    "build": "rimraf dist &&  ncc build ./index.ts -m -C  -o dist && rimraf app  && pkg ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "pkg": {
+    "outputPath": "app"
+  },
+  "engines": {
+    "node": ">=14.16"
+  },
+  "author": "uncle-light",
   "license": "ISC",
   "dependencies": {
+    "@types/figlet": "^1.5.4",
+    "@types/inquirer": "^8.2.1",
     "await-to-js": "^3.0.0",
     "axios": "^0.27.2",
     "axios-cookiejar-support": "^4.0.2",
     "cheerio": "1.0.0-rc.11",
     "cli-progress": "^3.11.1",
     "crypto-js": "^4.1.1",
+    "figlet": "^1.5.2",
+    "inquirer": "8.0",
     "nanoid": "^3.3.4",
     "node-xlsx": "^0.21.0",
     "qs": "^6.10.5",
+    "rimraf": "^3.0.2",
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
