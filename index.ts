@@ -8,7 +8,7 @@ const bootstrap = async () => {
     const [isLogin, msg] = await user.login()
     if (!isLogin) {
         console.log('登录失败', msg)
-        bootstrap()
+       await bootstrap()
         return
     }
     const courses = await user.getAllCourses()
@@ -23,6 +23,7 @@ const bootstrap = async () => {
         },
     ])
     user.doWork(filterCourses)
+    await bootstrap()
 }
 
 const desc = () => {
