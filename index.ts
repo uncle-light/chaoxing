@@ -22,7 +22,7 @@ const bootstrap = async () => {
             choices: courses
         },
     ])
-    user.doWork(filterCourses)
+    await user.doWork(filterCourses)
     await bootstrap()
 }
 

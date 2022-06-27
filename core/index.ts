@@ -398,7 +398,7 @@ export default class CX {
             for (let item of mission) {
                 const knowledge_raw = await this.get_mission(item.id, course.key)
                 for (let cardIndex in knowledge_raw[0].card.data) {
-                    sleep(1000)
+                    await sleep(1000)
                     console.log('开始读取标签信息')
                     const data = await this.get_knowledge(course.key, course.content.course.data[0].id, item.id, cardIndex)
                     // 匹配章节信息
