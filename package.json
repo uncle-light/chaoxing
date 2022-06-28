@@ -1,0 +1,47 @@
+{
+  "name": "chaoxing",
+  "version": "0.0.1",
+  "description": "超星",
+  "bin": "index.js",
+  "exports": "./dist/index.js",
+  "scripts": {
+    "dev": "ts-node index.ts",
+    "build": "rimraf dist &&  ncc build ./index.ts -m -C  -o dist && rimraf app && scp pkg.json ./dist/package.json  && cd dist && pkg package.json -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pkg": {
+    "outputPath": "../app",
+    "assets":["./fonts/Standard.flf"],
+    "targets":["node16-win-x64","node16-macos"]
+  },
+  "engines": {
+    "node": ">=14.16"
+  },
+  "author": "uncle-light",
+  "license": "ISC",
+  "dependencies": {
+    "@types/figlet": "^1.5.4",
+    "@types/inquirer": "^8.2.1",
+    "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
+    "axios-cookiejar-support": "^4.0.2",
+    "cheerio": "1.0.0-rc.11",
+    "cli-progress": "^3.11.1",
+    "crypto-js": "^4.1.1",
+    "figlet": "^1.5.2",
+    "inquirer": "8.0",
+    "nanoid": "^3.3.4",
+    "node-xlsx": "^0.21.0",
+    "qs": "^6.10.5",
+    "rimraf": "^3.0.2",
+    "tough-cookie": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/node": "^17.0.40",
+    "@types/progress": "^2.0.5",
+    "@types/qs": "^6.9.7",
+    "@types/tough-cookie": "^4.0.2"
+  }
+}

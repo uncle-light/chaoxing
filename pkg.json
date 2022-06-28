@@ -1,0 +1,16 @@
+{
+    "name": "chaoxing",
+    "version": "0.0.1",
+    "description": "超星",
+    "bin": "index.js",
+    "pkg": {
+      "outputPath": "app",
+      "assets":["./fonts/Standard.flf"],
+      "targets":["node16-win-x64","node16-macos"]
+    },
+    "engines": {
+      "node": ">=14.16"
+    },
+    "author": "uncle-light"
+
+  }
