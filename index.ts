@@ -86,5 +86,4 @@ const getInfo = async () => {
     } catch (error) {
         console.log('运行出错,请截图反馈,感谢配合!',error)
     }
-
 })()
