@@ -19,6 +19,7 @@ import {CheerioAPI} from "cheerio/lib/load";
 import axios, {AxiosInstance} from "axios-https-proxy-fix";
 import { CookieJar} from 'tough-cookie';
 import {wrapper} from 'axios-cookiejar-support';
+import { Console } from 'console';
 
 
 declare module 'axios-https-proxy-fix' {
@@ -33,7 +34,7 @@ export default class CX {
     courses: any[] = [];
     isDoWork=false;
     filterCourse: any
-    isCollection = true;
+    isCollection = false;
     retry = 5;
     mission: any[] = []; // 当前课程详细
     speed = 1 // 默认速度为1
@@ -226,16 +227,18 @@ export default class CX {
                               rt,
                               clipTime,
                               isdrag,
+                              courseId,
                               _tsp
                           }: any) {
         const url = `https://mooc1.chaoxing.com/multimedia/log/a/${cpi}/${dtoken}`
         const params = {
-            'otherInfo': otherInfo,
+            'otherInfo': String(otherInfo).substring(0,String(otherInfo).lastIndexOf('&')),
             'playingTime': playingTime,
             'duration': duration,
             'jobid': jobid,
             'clipTime': clipTime,
             'clazzId': clazzId,
+            courseId,
             'objectId': objectId,
             'userid': userid,
             'isdrag': isdrag,
@@ -246,6 +249,7 @@ export default class CX {
             'view': 'pc',
             '_t': Date.now()
         }
+        console.log(params)
         const [err, data] = await to(this.axios.get(url, {
             params
         }))
@@ -266,6 +270,7 @@ export default class CX {
                          jobid,
                          objectId,
                          userid,
+                         courseId,
                          name,
                          speed,
                          rt,
@@ -291,9 +296,11 @@ export default class CX {
                         otherInfo,
                         playingTime,
                         clazzId,
+                        isdrag,
                         jobid,
                         objectId,
                         userid,
+                        courseId,
                         rt,
                         _tsp,
                         clipTime: `0_${duration}`,
@@ -758,6 +765,7 @@ export default class CX {
                                 otherInfo: attachmentItem['otherInfo'],
                                 clazzId: course.key,
                                 jobid,
+                                courseId:course.content.course.data[0].id,
                                 rt: tagInfoRt || 1,
                                 objectId: detail['objectid'],
                                 userid: uid,
