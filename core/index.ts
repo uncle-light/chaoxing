@@ -716,7 +716,7 @@ export default class CX {
                         }
                         if (attachmentItem.type == 'workid') {
                             if(!this.isDoWork){
-                                return
+                                continue
                             }
                             await this.get_workInfo({
                                 clazzid: course.key,
