@@ -249,7 +249,6 @@ export default class CX {
             'view': 'pc',
             '_t': Date.now()
         }
-        console.log(params)
         const [err, data] = await to(this.axios.get(url, {
             params
         }))
@@ -285,7 +284,7 @@ export default class CX {
         }, cliProgress.Presets.shades_classic);
         b1.start(duration, playingTime)
         let sec = reportTimeInterval
-        let isdrag = 0
+        let isdrag = 1
         while (true) {
             if (sec >= reportTimeInterval || isdrag === 4) {
                 sec = 0
