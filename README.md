@@ -12,6 +12,7 @@
 ### 发行包运行(推荐)
 - [下载地址](https://github.com/uncle-light/chaoxing/releases)
 - 下载后打开运行 根据提示输入账号密码
+- 请使用最新发行版 老版本会无法使用！
 
 
 ### 使用Docker运行
