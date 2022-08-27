@@ -9,7 +9,7 @@ type AnswerInfo = {
 
 export default class Question {
 
-    private static url = 'xxxxxx';
+    private static url = 'https://cx.icodef.com/v2/answer?platform=cx';
     private static axios = axios
     static getQuestion(question: string, answer: string) {
     }
