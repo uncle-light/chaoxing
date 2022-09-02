@@ -49,12 +49,6 @@ const desc = async () => {
 
 const getInfo = async () => {
   return inquirer.prompt([
-    // {
-    //   type: 'confirm',
-    //   message: '是否采集题库',
-    //   default: false,
-    //   name: 'proxy'
-    // },
     {
       type: 'confirm',
       message: '是否使用代理',

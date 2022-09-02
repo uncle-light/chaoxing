@@ -37,25 +37,26 @@ export default class CX {
   jar: CookieJar // cookie
   axios: Got // axios实例
   cookies = ''
-  constructor (username: string, password: string, speed: number,proxy:boolean) {
+  sendLogUrl = ''
+  constructor (username: string, password: string, speed: number, proxy: boolean, proxyUrl = '') {
     this.username = username
     this.password = password
-    this.speed = speed
+    this.speed = Number(speed)
     this.jar = new CookieJar()
     this.axios = got.extend({
       // retry:{
       // 	limit:0
       // },
       // ignoreInvalidCookies: true,
-      agent:proxy? {
+      agent: proxy ? {
         https: new HttpsProxyAgent({
           keepAlive: true,
           keepAliveMsecs: 1000,
           maxSockets: 256,
           maxFreeSockets: 256,
-          proxy: 'http://127.0.0.1:6152'
+          proxy: proxyUrl
         })
-      }:{},
+      } : {},
       cookieJar: this.jar,
       headers: {
         'User-Agent': `Dalvik/2.1.0 (Linux; U; Android ${Math.floor(Math.random() * (9 - 12 + 1) + 9)}; MI${Math.floor(Math.random() * (10 - 12 + 1) + 10)} Build/SKQ1.210216.001) (device:MI${Math.floor(Math.random() * (10 - 12 + 1) + 10)}) Language/zh_CN com.chaoxing.mobile/ChaoXingStudy_3_5.1.4_android_phone_614_74 (@Kalimdor)_${nanoid(16)}`,
@@ -65,8 +66,8 @@ export default class CX {
   }
 
   /**
-     * 登录
-     */
+   * 登录
+   */
   async login () {
     const data = await this.axios.post(this.LOGIN_URL, {
       form: {
@@ -88,9 +89,9 @@ export default class CX {
   }
 
   /**
-     * 获取课程
-     * @returns 获取课程
-     */
+   * 获取课程
+   * @returns 获取课程
+   */
   async getAllCourses () {
     const courses = await this.axios.get(this.ALL_COURSES_URL).json<any>()
     if (courses.result === 1) {
@@ -103,9 +104,9 @@ export default class CX {
   }
 
   /**
-     * 获取课程详细信息
-     * @param courseKey 课程key
-     */
+   * 获取课程详细信息
+   * @param courseKey 课程key
+   */
   async getCourseData (courseKey: string) {
     const params = {
       id: courseKey,
@@ -136,11 +137,14 @@ export default class CX {
   }
 
   /**
-     * 读取章节信息
-     */
+   * 读取章节信息
+   */
   async get_mission (id: string, courseid: string) {
     const url = 'https://mooc1.chaoxing.com/gas/knowledge'
-    const { m_time, m_inf_enc } = get_enc_time()
+    const {
+      m_time,
+      m_inf_enc
+    } = get_enc_time()
     const params = {
       id,
       courseid,
@@ -171,19 +175,19 @@ export default class CX {
   }
 
   /**
-     * 读取学习记录
-     * @param courseid
-     * @param clazzid
-     * @param vc
-     * @param cpi
-     */
+   * 读取学习记录
+   * @param courseid
+   * @param clazzid
+   * @param vc
+   * @param cpi
+   */
   async record ({
     courseid,
     clazzid,
     vc,
     cpi
   }: any) {
-	  await this.axios.get('https://mooc1-1.chaoxing.com/visit/stucoursemiddle', {
+    await this.axios.get('https://mooc1-1.chaoxing.com/visit/stucoursemiddle', {
       searchParams: {
         courseid,
         clazzid,
@@ -200,7 +204,30 @@ export default class CX {
       flag: 'normal',
       _dc: Date.now()
     }
-    return await this.axios.get(url, { searchParams: params }).json<any>()
+    return this.axios.get(url, { searchParams: params }).json<any>()
+  }
+
+  async sendLog () {
+    if (this.sendLogUrl) {
+      await this.axios.get(this.sendLogUrl)
+    }
+  }
+
+  async getLogConfig ({
+    courseid,
+    clazzid,
+    cpi
+  }: any) {
+    const data = await this.axios.get('https://mooc2-ans.chaoxing.com/mooc2-ans/mycourse/studentcourse', {
+      searchParams: {
+        courseid,
+        clazzid,
+        cpi,
+        t: Date.now()
+      }
+    }).text() as string
+    // @ts-ignore
+    this.sendLogUrl = String(data).match(/"(https:\/\/fystat-ans.chaoxing.com.*?)"/g)[0].replace(/"/g, '') ?? ''
   }
 
   async main_pass_video ({
@@ -231,25 +258,44 @@ export default class CX {
       objectId,
       userid,
       isdrag,
-      enc: this.get_enc({ clazzId, jobid, objectId, playingTime, duration, userid }),
-      rt: '0.9', //
-      // 'rt': rt,
+      enc: this.get_enc({
+        clazzId,
+        jobid,
+        objectId,
+        playingTime,
+        duration,
+        userid
+      }),
+      // rt: '0.9', //
+      'rt': rt,
       dtype: 'Video',
       view: 'pc',
       _t: Date.now().toString()
     }
+
+    await  this.jar.setCookie('videojs_id=' + String(parseInt(String(Math.random() * 9999999))) + ';path=/;domain=mooc1.chaoxing.com', 'https://mooc1.chaoxing.com')
+    await this.jar.setCookie('videojs_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.chaoxing.com', 'https://mooc1.chaoxing.com')
     const [err, data] = await to(this.axios.get(url, {
       searchParams: params,
       headers: {
-        Host:'mooc1.chaoxing.com',
-        Referer:'https://mooc1.chaoxing.com/ananas/modules/video/index.html?v=2022-0805-1500'
-      }
-    ,}).json<any>())
+        Host: 'mooc1.chaoxing.com',
+        'Sec-Fetch-Site': 'same-origin',
+        'Content-Type': 'application/json',
+        Referer: 'https://mooc1.chaoxing.com/ananas/modules/video/index.html?v=2022-0805-1500'
+      },
+      cookieJar: this.jar
+    }).json<any>())
     if (err != null) {
-      console.log(err)
-      throw new Error('执行出错')
+      return {
+        status: false,
+        msg: err,
+        data
+      }
     }
-    return data
+    return {
+      status: true,
+      data
+    }
   }
 
   // 执行
@@ -265,10 +311,10 @@ export default class CX {
     courseId,
     name,
     speed,
-    rt,
     reportTimeInterval,
     _tsp
   }: any) {
+    let rt = 0.9
     let playingTime = 0
     console.log('当前播放速率：' + (this.speed) + '倍速')
     const b1 = new cliProgress.SingleBar({
@@ -281,7 +327,10 @@ export default class CX {
     while (true) {
       if (sec >= reportTimeInterval || isdrag === 4) {
         sec = 0
-        const data = await this.main_pass_video(
+        const {
+          data,
+          status
+        } = await this.main_pass_video(
           {
             cpi,
             dtoken,
@@ -299,6 +348,7 @@ export default class CX {
             duration
           }
         )
+
         if (data.isPassed) {
           if (isdrag === 4) {
             b1.stop()
@@ -307,9 +357,15 @@ export default class CX {
           isdrag = 4
           playingTime = duration
         } else if ('error' in data) {
+          if (status == false && rt == 0.9) {
+            rt = 1
+            await sleep(10000)
+            continue
+          }
           b1.stop()
           throw new Error('视频播放失败')
         }
+        await this.sendLog()
         continue
       }
       if (playingTime < duration) {
@@ -324,7 +380,13 @@ export default class CX {
     }
   }
 
-  async doDocument ({ jobid, knowledgeid, courseid, clazzid, jtoken }: any) {
+  async doDocument ({
+    jobid,
+    knowledgeid,
+    courseid,
+    clazzid,
+    jtoken
+  }: any) {
     const url = 'https://mooc1-2.chaoxing.com/ananas/job/document'
     const params = {
       jobid,
@@ -334,17 +396,34 @@ export default class CX {
       jtoken,
       _dc: Date.now()
     }
-    return await this.axios.get(url, { searchParams: params })
+    await sleep(1000)
+    return this.axios.get(url, { searchParams: params })
   }
 
   // 加密数据
-  get_enc ({ clazzId, userid, jobid, objectId, playingTime, duration }: any) {
+  get_enc ({
+    clazzId,
+    userid,
+    jobid,
+    objectId,
+    playingTime,
+    duration
+  }: any) {
     return CryptoJS.MD5(`[${clazzId}][${userid}][${jobid}][${objectId}][${playingTime * 1000}][d_yHJ!$pdA~5][${duration * 1000}][0_${duration}]`).toString()
   }
 
   async get_workInfo ({
-    workid, jobid, knowledgeid, cpi, clazzid, ktoken, type,
-    enc, utenc, courseid, workUrl
+    workid,
+    jobid,
+    knowledgeid,
+    cpi,
+    clazzid,
+    ktoken,
+    type,
+    enc,
+    utenc,
+    courseid,
+    workUrl
   }: any) {
     const url = 'https://mooc1-2.chaoxing.com/api/work'
     const params = {
@@ -389,17 +468,19 @@ export default class CX {
       console.log(err)
       throw new Error('执行出错')
     }
-    await this.acquisitionProblem(data, workUrl, workid,enc)
+    await this.acquisitionProblem(data, workUrl, workid, enc)
   }
 
-  async acquisitionProblem (data: string, workUrl: string, workid: string,enc:string
+  async acquisitionProblem (data: string, workUrl: string, workid: string, enc: string
   ) {
     const $ = cheerio.load(data)
     const collection = $('#RightCon > .radiusBG > .CeYan > .ZyTop > h3 span').html() as string
     if (!collection) {
       return
     }
-    if (collection.includes('待做')) {
+    if (!collection.includes('待做')) {
+      await this.collectionQuestion($, workid)
+    } else {
       const questionId = $('#workLibraryId').attr('value') || $('#oldWorkId').attr('value') as string
       const questionList = this.extractQuestion($)
       if (questionList.length === 0) return
@@ -454,8 +535,17 @@ export default class CX {
       Object.entries(formKey).forEach(([key, value]) => {
         formData.append(key, value as string)
       })
+      const answerData: any[] = []
       questionList.forEach((cur, index) => {
         formData.append(cur.answerTypeName, cur.answerType as any)
+        const answerData = {
+          courseName: this.courseName,
+          questionType: cur.questionType,
+          platform: 'cx',
+          questionName: cur.title,
+          channel: 'test',
+          answer: []
+        }
         if (answer[index].result.length === 0) {
           formData.append(`answer${cur.answerId}`, '')
           isTemp = true
@@ -466,16 +556,24 @@ export default class CX {
               if (selectItem) {
                 formData.append(selectItem.name, item.option)
               }
+              // answerData.answer.push({
+              //   answer: selectItem.name,
+              //   answerValue: item.value
+              // })
               return item.option
             }).join(''))
           } else {
+            // answerData.answer.push({
+            //   answer: selectItem.answer,
+            //   answerValue: answer[index].result[0].correct[0].option
+            // })
             formData.append(`answer${cur.answerId}`, answer[index].result[0].correct[0].option)
           }
         }
       })
       if (isTemp) {
         formData.set('pyFlag', '1')
-        await this.temporary(formData.toString(), {
+        await this.temporary(formData, {
           _classId: classId,
           courseid,
           token,
@@ -484,11 +582,18 @@ export default class CX {
         return
       }
       formData.set('pyFlag', '')
-      await this.validate({ classId, courseId: courseid, cpi })
+      await this.validate({
+        classId,
+        courseId: courseid,
+        cpi
+      })
       await this.submitAnswer(formUrl, formData)
+
+      await submitQuestion({
+        question: answerData
+      })
       return
     }
-    await this.collectionQuestion($, workid)
   }
 
   async collectionQuestion ($: CheerioAPI, workid: string) {
@@ -500,8 +605,14 @@ export default class CX {
       let answer: any[] = []
       if (questionType === '判断题') {
         answer = [
-          { answer: '√', answerValue: true },
-          { answer: '×', answerValue: false }
+          {
+            answer: '√',
+            answerValue: true
+          },
+          {
+            answer: '×',
+            answerValue: false
+          }
         ]
       } else {
         answer = $(item).find('form .Zy_ulTop li').map(function (i, el) {
@@ -609,8 +720,8 @@ export default class CX {
   }
 
   /**
-     * 提交验证
-     */
+   * 提交验证
+   */
   async validate ({
     classId,
     courseId,
@@ -627,6 +738,7 @@ export default class CX {
   }
 
   async submitAnswer (url: string, data: any) {
+    await sleep(1000 * Math.floor(Math.random() * (35 - 25) + 25))
     await this.axios.post(`https://mooc1.chaoxing.com/work/${url}&ua=pc&formType2=post&version=1&saveStatus=1&pos=`, {
       form: data,
     }).json<any>().then((res) => {
@@ -645,9 +757,15 @@ export default class CX {
     })
     const uid = this.jar.serializeSync().cookies.find(item => item.key === '_uid')?.value
     for (const course of this.filterCourse) {
+      await this.getLogConfig({
+        courseid: course.content.course.data[0].id,
+        clazzid: course.key,
+        cpi: course.cpi,
+      })
       this.courseName = course.content.course.data[0].name
       console.log('开始处理', course.content.course.data[0].name)
       const mission = await this.getCourseData(course.key)
+      console.log(mission)
       for (const item of mission) {
         await this.record({
           cpi: course.cpi,
@@ -689,7 +807,9 @@ export default class CX {
               if ('jobid' in attachmentItem.property) {
                 jobid = attachmentItem.property.jobid
               } else {
-                if ('_jobid' in attachmentItem.property) { jobid = attachmentItem.property._jobid }
+                if ('_jobid' in attachmentItem.property) {
+                  jobid = attachmentItem.property._jobid
+                }
               }
             }
             if (!jobid) {

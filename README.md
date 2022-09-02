@@ -3,6 +3,7 @@
 ## :hammer: 提示
  - 只完成视频任务 答题任务不做 欢迎pr
  - 带:lock:章节不能使用
+ - 建议加入cx更新频繁 会不定时在群里更新beta版本
  - 交流地址[电报](https://t.me/+ezFiFyW3LUM2MmM9)
  
 :star: 觉得有帮助的朋友可以给个Star
