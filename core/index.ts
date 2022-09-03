@@ -213,6 +213,12 @@ export default class CX {
     }
   }
 
+  async initVideo({mid,cpi,classid}:any){
+    await  this.axios.get('https://mooc1-2.chaoxing.com/mycourse/studentstudy',{
+      searchParams:{mid,cpi,classid,_dc:Date.now()}
+    })
+  }
+
   async getLogConfig ({
     courseid,
     clazzid,
@@ -272,9 +278,6 @@ export default class CX {
       view: 'pc',
       _t: Date.now().toString()
     }
-
-    await  this.jar.setCookie('videojs_id=' + String(parseInt(String(Math.random() * 9999999))) + ';path=/;domain=mooc1.chaoxing.com', 'https://mooc1.chaoxing.com')
-    await this.jar.setCookie('videojs_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.chaoxing.com', 'https://mooc1.chaoxing.com')
     const [err, data] = await to(this.axios.get(url, {
       searchParams: params,
       headers: {
@@ -283,7 +286,6 @@ export default class CX {
         'Content-Type': 'application/json',
         Referer: 'https://mooc1.chaoxing.com/ananas/modules/video/index.html?v=2022-0805-1500'
       },
-      cookieJar: this.jar
     }).json<any>())
     if (err != null) {
       return {
@@ -765,7 +767,6 @@ export default class CX {
       this.courseName = course.content.course.data[0].name
       console.log('开始处理', course.content.course.data[0].name)
       const mission = await this.getCourseData(course.key)
-      console.log(mission)
       for (const item of mission) {
         await this.record({
           cpi: course.cpi,
@@ -861,6 +862,7 @@ export default class CX {
                 console.log('没有获取到章节信息 已跳过当前任务点')
                 continue
               }
+              await this.initVideo({clasid: course.key,mid:attachmentItem.mid,  cpi: attachments.defaults.cpi, })
               await this.pass_video({
                 duration: detail.duration,
                 cpi: attachments.defaults.cpi,
