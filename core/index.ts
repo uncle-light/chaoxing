@@ -296,7 +296,7 @@ export default class CX {
     }
     return {
       status: true,
-      data
+      data 
     }
   }
 
@@ -326,8 +326,9 @@ export default class CX {
     b1.start(duration, playingTime)
     let sec = reportTimeInterval
     let isdrag = 3
+    await this.sendLog()
     while (true) {
-      if (sec >= reportTimeInterval || isdrag === 4) {
+      if (sec >= 61 || isdrag === 4) {
         sec = 0
         const {
           data,
@@ -349,7 +350,7 @@ export default class CX {
             clipTime: `0_${duration}`,
             duration
           }
-        )
+        ) as any
 
         if (data.isPassed) {
           if (isdrag === 4) {
@@ -367,7 +368,6 @@ export default class CX {
           b1.stop()
           throw new Error('视频播放失败')
         }
-        await this.sendLog()
         continue
       }
       if (playingTime < duration) {
