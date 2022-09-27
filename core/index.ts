@@ -24,7 +24,7 @@ export default class CX {
   username: string //
   password: string //
   courses: any[] = []
-  isDoWork = true
+  isDoWork = false
   filterCourse: any[] | undefined
   isCollection = false
   retry = 5
