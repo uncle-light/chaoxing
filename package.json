@@ -36,7 +36,7 @@
     "axios-https-proxy-fix": "^0.17.1",
     "cheerio": "1.0.0-rc.11",
     "cli-progress": "^3.11.1",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "figlet": "^1.5.2",
     "got": "^11.3.1",
     "hpagent": "^1.0.0",
