@@ -31,7 +31,7 @@
     "@types/lodash-es": "^4.17.6",
     "@types/tunnel": "^0.0.3",
     "await-to-js": "^3.0.0",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "axios-cookiejar-support": "^4.0.2",
     "axios-https-proxy-fix": "^0.17.1",
     "cheerio": "1.0.0-rc.11",
