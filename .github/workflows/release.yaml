@@ -62,8 +62,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            chaoxing-${{ needs.capture-version.outputs.tag  }}-linux
-            chaoxing-${{ needs.capture-version.outputs.tag  }}-macos
-            chaoxing-${{ needs.capture-version.outputs.tag  }}-win.exe
+            chaoxing-linux-${{ needs.capture-version.outputs.tag  }}
+            chaoxing-macos-${{ needs.capture-version.outputs.tag  }}
+            chaoxing-win-${{ needs.capture-version.outputs.tag  }}.exe
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
