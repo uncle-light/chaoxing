@@ -5,5 +5,7 @@ export default antfu({
 }, {
   rules: {
     'no-console': 'off',
+    'no-tabs': ['warn', { allowIndentationTabs: true }],
   },
+  env: { Node: true, Browser: true, es6: true },
 })
