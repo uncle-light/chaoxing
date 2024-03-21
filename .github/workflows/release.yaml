@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
 
 jobs:
   build:
@@ -23,12 +21,14 @@ jobs:
 
       - name: Run build script
         run: npm run build
-
+      - name: Install ncc
+        run: npm install @vercel/ncc -g
       - name: Build with ncc
-        run: npx ncc build index.js -o package
-
+        run: ncc build index.js -o package
+      - name: Install pkg
+        run: npm install pkg -g      
       - name: Package with pkg
-        run: npx pkg package/index.js --targets node14-linux,node14-macos,node14-win
+        run: pkg package/index.js --targets node14-linux,node14-macos,node14-win
 
       - name: Capture the version tag
         id: vars
