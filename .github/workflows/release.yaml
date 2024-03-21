@@ -28,7 +28,7 @@ jobs:
       - name: Install pkg
         run: npm install pkg -g      
       - name: Package with pkg
-        run: pkg package/index.js --targets node16-linux,node16-macos,node16-win --out-path=package/
+        run: pkg package/index.js --targets node16-linux,node16-macos,node16-win --output package
 
       - name: Capture the version tag
         id: vars
