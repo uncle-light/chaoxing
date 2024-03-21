@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - v*
 
 jobs:
   build:
@@ -29,10 +31,7 @@ jobs:
         run: npx pkg package/index.js  --targets node16-linux,node16-macos,node16-win -o package/chaoxing
       - name: Capture the version tag
         id: vars
-        run: |
-          echo "tag=${1}" >> $GITHUB_ENV
-          echo "tag=${1}" >> $GITHUB_OUTPUT
-        # run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Rename artifacts to include version number
         run: |
@@ -53,17 +52,21 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Capture the version tag
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: chaoxing-${{ needs.capture-version.outputs.tag  }}
+          name: chaoxing-${{ env.tag  }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            chaoxing-linux-${{ needs.capture-version.outputs.tag  }}
-            chaoxing-macos-${{ needs.capture-version.outputs.tag  }}
-            chaoxing-win-${{ needs.capture-version.outputs.tag  }}.exe
+            chaoxing-linux-${{ env.tag  }}
+            chaoxing-macos-${{ env.tag  }}
+            chaoxing-win-${{ env.tag  }}.exe
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
