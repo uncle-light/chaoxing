@@ -29,7 +29,9 @@ jobs:
         run: npx pkg package/index.js  --targets node16-linux,node16-macos,node16-win -o package/chaoxing
       - name: Capture the version tag
         id: vars
-        run: echo "tag=1" >> $GITHUB_ENV
+        run: |
+          echo "tag=${1}" >> $GITHUB_ENV
+          echo "tag=${1}" >> $GITHUB_OUTPUT
         # run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Rename artifacts to include version number
@@ -54,14 +56,14 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: chaoxing-${{ env.tag }}
+          name: chaoxing-${{ needs.capture-version.outputs.tag  }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            chaoxing-${{ env.tag }}-linux
-            chaoxing-${{ env.tag }}-macos
-            chaoxing-${{ env.tag }}-win.exe
+            chaoxing-${{ needs.capture-version.outputs.tag  }}-linux
+            chaoxing-${{ needs.capture-version.outputs.tag  }}-macos
+            chaoxing-${{ needs.capture-version.outputs.tag  }}-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
