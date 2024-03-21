@@ -24,21 +24,18 @@ jobs:
       - name: Install ncc
         run: npm install @vercel/ncc -g
       - name: Build with ncc
-        run: ncc build dist/index.js -o package
-      - name: Install pkg
-        run: npm install pkg -g      
+        run: ncc build dist/index.js -o package    
       - name: Package with pkg
-        run: pkg package/index.js --targets node16-linux,node16-macos,node16-win --output package
-
+        run: npx pkg package/index.js  --targets node16-linux,node16-macos,node16-win -o package/chaoxing
       - name: Capture the version tag
         id: vars
         run: echo "::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})"
 
       - name: Rename artifacts to include version number
         run: |
-          mv package/my-app-linux package/chaoxing-${{ steps.vars.outputs.tag }}-linux
-          mv package/my-app-macos package/chaoxing-${{ steps.vars.outputs.tag }}-macos
-          mv package/my-app-win.exe package/chaoxing-${{ steps.vars.outputs.tag }}-win.exe
+          mv package/chaoxing-linux package/chaoxing-linux-${{ steps.vars.outputs.tag }}
+          mv package/chaoxing-macos package/chaoxing-macos-${{ steps.vars.outputs.tag }}
+          mv package/chaoxing-win.exe package/chaoxing-win-${{ steps.vars.outputs.tag }}.exe
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
