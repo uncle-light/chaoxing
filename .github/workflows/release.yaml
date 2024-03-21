@@ -29,22 +29,23 @@ jobs:
         run: npx pkg package/index.js  --targets node16-linux,node16-macos,node16-win -o package/chaoxing
       - name: Capture the version tag
         id: vars
-        run: echo "::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})"
+        run: echo "tag=1" >> $GITHUB_ENV
+        # run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Rename artifacts to include version number
         run: |
-          mv package/chaoxing-linux package/chaoxing-linux-${{ steps.vars.outputs.tag }}
-          mv package/chaoxing-macos package/chaoxing-macos-${{ steps.vars.outputs.tag }}
-          mv package/chaoxing-win.exe package/chaoxing-win-${{ steps.vars.outputs.tag }}.exe
+          mv package/chaoxing-linux package/chaoxing-linux-${{ env.tag }}
+          mv package/chaoxing-macos package/chaoxing-macos-${{ env.tag }}
+          mv package/chaoxing-win.exe package/chaoxing-win-${{ env.tag }}.exe
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: chaoxing-${{ steps.vars.outputs.tag }}
+          name: chaoxing-${{ env.tag }}
           path: |
-            package/chaoxing-${{ steps.vars.outputs.tag }}-linux
-            package/chaoxing-${{ steps.vars.outputs.tag }}-macos
-            package/chaoxing-${{ steps.vars.outputs.tag }}-win.exe
+            package/chaoxing-linux-${{ env.tag }}
+            package/chaoxing-macos-${{ env.tag }}
+            package/chaoxing-win-${{ env.tag }}.exe
 
   release:
     needs: build
