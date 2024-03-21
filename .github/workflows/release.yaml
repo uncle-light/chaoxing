@@ -54,14 +54,14 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: chaoxing-${{ needs.build.outputs.tag }}
+          name: chaoxing-${{ env.tag }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            chaoxing-${{ needs.build.outputs.tag }}-linux
-            chaoxing-${{ needs.build.outputs.tag }}-macos
-            chaoxing-${{ needs.build.outputs.tag }}-win.exe
+            chaoxing-${{ env.tag }}-linux
+            chaoxing-${{ env.tag }}-macos
+            chaoxing-${{ env.tag }}-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
