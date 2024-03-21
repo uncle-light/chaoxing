@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install Dependencies
         run: npm install
@@ -24,7 +24,7 @@ jobs:
       - name: Install ncc
         run: npm install @vercel/ncc -g
       - name: Build with ncc
-        run: ncc build index.js -o package
+        run: ncc build dist/index.js -o package
       - name: Install pkg
         run: npm install pkg -g      
       - name: Package with pkg
