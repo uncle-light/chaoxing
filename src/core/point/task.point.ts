@@ -61,19 +61,17 @@ export class TaskPoint extends BasePoint {
     const { jobList, jobInfo } = decodeJobList(resultPointRaw)
     for (const job of jobList) {
       await sleep(ENV.TASK_WAIT_TIME * 1000)
-      console.log(job.type)
       switch (job.type) {
-        // case "video":
-        //   await this.doPointVideo(job, jobInfo as JobInfo);
-        //   break;
-        // case "document":
-        //   await this.doPointDocument(job, jobInfo as JobInfo);
-        //   break;
+        case 'video':
+          await this.doPointVideo(job, jobInfo as JobInfo)
+          break
+        case 'document':
+          await this.doPointDocument(job, jobInfo as JobInfo)
+          break
         case 'workid':
-          await this.doPointWork(pointId, job, jobInfo as JobInfo)
+          // await this.doPointWork(pointId, job, jobInfo as JobInfo)
           break
         default:
-          console.log(job)
           break
       }
     }
@@ -91,15 +89,16 @@ export class TaskPoint extends BasePoint {
         // 过滤
         if (!point.card.data[pointIndex]?.description)
           continue
-
-        // 获取章节信息
-        // const { data, module } = decodePointInfo(
-        //   point.card.data[pointIndex]?.description,
-        // )
-        await this.doPoint(
-          point.id as unknown as string,
-          Number.parseInt(pointIndex),
+         // 获取章节信息
+        const { data, module } = decodePointInfo(
+          point.card.data[pointIndex]?.description,
         )
+        if (module) {
+          await this.doPoint(
+            point.id as unknown as string,
+            Number.parseInt(pointIndex),
+          )
+        }
       }
     }
   }

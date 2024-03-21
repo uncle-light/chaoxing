@@ -76,14 +76,12 @@ export class VideoTaskPoint extends BasePoint {
         }
         if (isPassed)
           break
-
         wait_time = generateRandomInteger(30, 90)
         if (playingTime + wait_time >= Number(duration)) {
           wait_time = Number(duration) - playingTime
           isFinished = true
         }
         playingTime += wait_time
-        console.log(`等待${wait_time}秒后继续`)
         await sleep(wait_time * 1000)
       }
     }

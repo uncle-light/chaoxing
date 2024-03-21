@@ -23,8 +23,8 @@ export class Cx {
   public currentCourse!: Course
   constructor({
     username,
-		password,
-		speed,
+password,
+speed,
   }: {
     username: string
     password: string
@@ -71,14 +71,12 @@ export class Cx {
       })
       .json<{ status: boolean, msg2: string }>()
     if (loginResult.status) {
-      this.logger.log('登录成功')
       return {
         status: true,
         msg: '登录成功',
       }
     }
     else {
-      this.logger.error('登录失败: ', loginResult.msg2)
       return {
         status: false,
         msg: loginResult.msg2,

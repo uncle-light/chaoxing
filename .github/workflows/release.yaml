@@ -1,0 +1,67 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run build script
+        run: npm run build
+
+      - name: Build with ncc
+        run: npx ncc build index.js -o package
+
+      - name: Package with pkg
+        run: npx pkg package/index.js --targets node14-linux,node14-macos,node14-win
+
+      - name: Capture the version tag
+        id: vars
+        run: echo "::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})"
+
+      - name: Rename artifacts to include version number
+        run: |
+          mv package/my-app-linux package/chaoxing-${{ steps.vars.outputs.tag }}-linux
+          mv package/my-app-macos package/chaoxing-${{ steps.vars.outputs.tag }}-macos
+          mv package/my-app-win.exe package/chaoxing-${{ steps.vars.outputs.tag }}-win.exe
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: chaoxing-${{ steps.vars.outputs.tag }}
+          path: |
+            package/chaoxing-${{ steps.vars.outputs.tag }}-linux
+            package/chaoxing-${{ steps.vars.outputs.tag }}-macos
+            package/chaoxing-${{ steps.vars.outputs.tag }}-win.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: chaoxing-${{ needs.build.outputs.tag }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            chaoxing-${{ needs.build.outputs.tag }}-linux
+            chaoxing-${{ needs.build.outputs.tag }}-macos
+            chaoxing-${{ needs.build.outputs.tag }}-win.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

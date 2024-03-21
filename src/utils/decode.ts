@@ -146,14 +146,15 @@ export function decodeJobList(text: string) {
     fid: _cards.defaults.fid,
     cpi: _cards.defaults.cpi,
     qnenc: _cards.defaults.qnenc,
+
   }
   const _job_list: Job[] = []
   for (const _card of _cards.attachments) {
     // 过滤掉已经完成的任务和非开放任务
     // TODO 未完成的任务
-    // if (_card.isPassed === true || _card.job === false) {
-    //   continue;
-    // }
+    if (_card.isPassed === true || _card.job === false) {
+      continue;
+    }
     const _job: Job = {
       type: _card.type,
       jobid: _card.jobid,
