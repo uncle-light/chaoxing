@@ -16,7 +16,8 @@
 1. 完善中
 
 ## 交流地址
-[TG频道](https://t.me/+76EuWDk9JHpjYjI1 "TG")
+
+[TG频道（重庆高校、超星等）](https://t.me/+76EuWDk9JHpjYjI1 "TG")
 ## 贡献
 
 欢迎大家提供意见和建议，一起改进这个项目。请在 GitHub 上提交 issue 或者 pull request。
